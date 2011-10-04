@@ -1,0 +1,6 @@
+{
+    "email": "enter your email here",
+    "password": "put your password here",
+    // mode can be: `source` for direct link to source or `view` for shareable cl.ly link
+    "mode": "source"
+}
