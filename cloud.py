@@ -33,6 +33,22 @@ def fallback(urls):
     print("I can't put urls in the clipboard. But you can select and copy next line:")
     print(",".join(urls))
 
+HOME = os.environ['HOME']
+TOKEN = re.compile("\s*//.*", re.L)
+SCRIPT = os.path.realpath(__file__)
+SCRIPT_FOLDER = os.path.split(SCRIPT)[0]
+
+if os.path.isfile("%s/.cloud" % HOME):
+    with open("%s/.cloud" % HOME, "r") as f:
+        buf = f.read()
+    buf = ''.join(TOKEN.split(buf))
+    SETTINGS = json.loads(buf)
+else:
+    with open("%s/.cloud" % HOME, "w") as f:
+        with open("%s/cloud-settings.json" % SCRIPT_FOLDER, "r") as s:
+            f.write(s.read())
+    abort("You need to type your email and password into ~/.cloud file")
+
 try:
     from cloudapp.cloud import Cloud
 except Exception, e:
@@ -40,20 +56,6 @@ except Exception, e:
 
 if not sys.argv[1:]:
     abort("You need to specify a file or two to upload. Or three... or... you got this.")
-
-TOKEN = re.compile("\s*//.*", re.L)
-
-if os.path.isfile("/Users/nilcolor/.cloud"):
-    with open("/Users/nilcolor/.cloud", "r") as f:
-        buf = f.read()
-    buf = ''.join(TOKEN.split(buf))
-
-    SETTINGS = json.loads(buf)
-else:
-    with open("/Users/nilcolor/.cloud", "w") as f:
-        with open("./cloud-settings.json", "r") as s:
-            f.write(s.read())
-    abort("You need to type your email and password into ~/.cloud file")
 
 urls = []
 your_cloud = Cloud()
